@@ -98,6 +98,15 @@ $api_base = 'https://zaidi123.pythonanywhere.com';
 		</div>
 	</div>
 
+	<!-- Dish image lightbox (template m_005: click dish image to open) -->
+	<div id="catch_dish_image_modal" class="catch_dish_image_modal" role="dialog" aria-modal="true" aria-label="Dish image" style="display:none;">
+		<div class="catch_dish_image_backdrop"></div>
+		<div class="catch_dish_image_box">
+			<button type="button" class="catch_dish_image_close" aria-label="Close">&times;</button>
+			<img id="catch_dish_image_el" src="" alt="Dish" class="catch_dish_image_img" />
+		</div>
+	</div>
+
 	<script>
 	(function() {
 		var API_BASE = <?php echo json_encode(rtrim($api_base, '/')); ?>;
@@ -159,8 +168,36 @@ $api_base = 'https://zaidi123.pythonanywhere.com';
 				document.body.style.overflow = '';
 			}
 		}
+		var dishImageModal = document.getElementById('catch_dish_image_modal');
+		var dishImageEl = document.getElementById('catch_dish_image_el');
+		function openDishImageModal(src) {
+			if (!dishImageEl || !dishImageModal) return;
+			dishImageEl.src = src;
+			dishImageEl.alt = 'Dish';
+			dishImageModal.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		}
+		function closeDishImageModal() {
+			if (dishImageModal) {
+				dishImageModal.style.display = 'none';
+				document.body.style.overflow = '';
+			}
+		}
+		if (dishImageModal) {
+			var dib = dishImageModal.querySelector('.catch_dish_image_backdrop');
+			var dic = dishImageModal.querySelector('.catch_dish_image_close');
+			if (dib) dib.addEventListener('click', closeDishImageModal);
+			if (dic) dic.addEventListener('click', closeDishImageModal);
+		}
 		if (contentEl) {
 			contentEl.addEventListener('click', function(e) {
+				var imageWrap = e.target.closest('.catch-menu-m005 .menu-item-image-wrap');
+				var img = imageWrap ? imageWrap.querySelector('img.menu-item-image') : null;
+				if (imageWrap && img && img.src) {
+					e.preventDefault();
+					openDishImageModal(img.src);
+					return;
+				}
 				var androidBtn = e.target.closest('button.catch_menu_dish_ar_android') || e.target.closest('button.btn-ar-android');
 				if (androidBtn) {
 					e.preventDefault();
@@ -175,10 +212,10 @@ $api_base = 'https://zaidi123.pythonanywhere.com';
 				var safari = isIOSSafari();
 				if (!mobile) {
 					e.preventDefault();
-					showArPopup(false);
+					showArPopup(false); /* Laptop/desktop: use phone to view AR */
 				} else if (iphone && !safari) {
 					e.preventDefault();
-					showArPopup(true);
+					showArPopup(true);  /* iPhone non-Safari: use Safari only */
 				}
 			});
 		}
