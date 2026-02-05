@@ -4,16 +4,8 @@ if ($slug === '') {
 	header('Location: index.php');
 	exit;
 }
-// Production: all APIs hit zaidi123.pythonanywhere.com. Local: use same host with port 8000.
-$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost:8001';
-$production_domain = 'zaidi123.pythonanywhere.com';
-if (strpos($host, $production_domain) !== false) {
-	$api_base = 'https://' . $production_domain;
-} else {
-	$api_base = (strpos($host, ':') !== false)
-		? 'http://' . preg_replace('/:\d+$/', ':8000', $host)
-		: 'http://' . $host . ':8000';
-}
+// Production: API at zaidi123.pythonanywhere.com (hardcoded).
+$api_base = 'https://zaidi123.pythonanywhere.com';
 ?>
 <!DOCTYPE html>
 <html lang="en">
