@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Merriweather:ital,wght@0,400;1,400&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Playfair Display', Georgia, serif;
+      background-color: #f8f5ed;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      min-height: 100vh;
+      padding: 50px 24px 60px;
+      color: #332f2e;
+    }
+    .menu-wrap {
+      max-width: 850px;
+      margin: 0 auto;
+    }
+    .restaurant-brand {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .restaurant-logo-wrap {
+      margin: 0 auto 16px;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .restaurant-logo-wrap img,
+    .restaurant-logo-wrap svg {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    .restaurant-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.75em;
+      font-weight: 700;
+      color: #332f2e;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+    .menu-header {
+      text-align: center;
+      margin-bottom: 38px;
+      position: relative;
+    }
+    .menu-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 3.8em;
+      font-weight: 700;
+      color: #332f2e;
+      letter-spacing: 0.02em;
+      display: inline-block;
+      position: relative;
+      padding: 0 24px;
+    }
+    .menu-header h1::before,
+    .menu-header h1::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 100px;
+      height: 1px;
+      background-color: #7b6b5d;
+    }
+    .menu-header h1::before {
+      right: 100%;
+      margin-right: 12px;
+      background: linear-gradient(90deg, transparent 0%, #7b6b5d 20%);
+      border-radius: 1px;
+    }
+    .menu-header h1::after {
+      left: 100%;
+      margin-left: 12px;
+      background: linear-gradient(90deg, #7b6b5d 80%, transparent 100%);
+      border-radius: 1px;
+    }
+    .menu-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 50px;
+      gap: 0;
+    }
+    .menu-item:last-child { margin-bottom: 0; }
+    .menu-item-img {
+      width: 250px;
+      height: 180px;
+      flex-shrink: 0;
+      border: 1px solid #eaeaea;
+      border-radius: 5px;
+      margin-right: 25px;
+      background-color: #eee;
+      background-image: url('../assets/menu_004_image.png');
+      background-repeat: no-repeat;
+      background-size: 100% 400%;
+      object-fit: cover;
+    }
+    .menu-item-img.img-1 { background-position: 0% 0%; }
+    .menu-item-img.img-2 { background-position: 0% 25%; }
+    .menu-item-img.img-3 { background-position: 0% 50%; }
+    .menu-item-img.img-4 { background-position: 0% 75%; }
+    .menu-item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
+    }
+    .menu-item-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .menu-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      border-bottom: 1px dashed #ccc;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .menu-item-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.8em;
+      font-weight: 700;
+      color: #332f2e;
+      white-space: nowrap;
+    }
+    .menu-item-price {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.6em;
+      font-weight: 400;
+      color: #332f2e;
+      white-space: nowrap;
+    }
+    .menu-item-desc {
+      font-family: 'Merriweather', Georgia, serif;
+      font-size: 1.1em;
+      font-style: italic;
+      line-height: 1.5;
+      color: #6c6861;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu-wrap catch-menu-m004">
+    <div class="restaurant-brand">
+      <div class="restaurant-logo-wrap" aria-hidden="true">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" width="80" height="80" role="img" aria-label="Logo">
+          <defs>
+            <linearGradient id="starGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#f5d547"/>
+              <stop offset="35%" style="stop-color:#e8c229"/>
+              <stop offset="70%" style="stop-color:#c9a227"/>
+              <stop offset="100%" style="stop-color:#a67c1a"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#starGold)" stroke="#9a7214" stroke-width="1" d="M60 12 L68 44 L102 44 L74 64 L82 98 L60 80 L38 98 L46 64 L18 44 L52 44 Z"/>
+        </svg>
+      </div>
+      <p class="restaurant-name">Restaurant Name</p>
+    </div>
+    <header class="menu-header">
+      <h1>MENU</h1>
+    </header>
+
+    <div class="menu-items">
+    <div class="menu-item">
+      <div class="menu-item-img img-1"></div>
+      <div class="menu-item-text">
+        <div class="menu-item-top">
+          <span class="menu-item-name">Grilled Steak</span>
+          <span class="menu-item-price">$24.99</span>
+        </div>
+        <p class="menu-item-desc">Juicy grilled sirloin steak with garlic herb butter, served with roasted potatoes.</p>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-item-img img-2"></div>
+      <div class="menu-item-text">
+        <div class="menu-item-top">
+          <span class="menu-item-name">Chicken Alfredo</span>
+          <span class="menu-item-price">$18.99</span>
+        </div>
+        <p class="menu-item-desc">Creamy fettuccine pasta with grilled chicken in a rich Alfredo sauce.</p>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-item-img img-3"></div>
+      <div class="menu-item-text">
+        <div class="menu-item-top">
+          <span class="menu-item-name">Shrimp Tacos</span>
+          <span class="menu-item-price">$16.50</span>
+        </div>
+        <p class="menu-item-desc">Spicy shrimp tacos with slaw, avocado, and chipotle crema.</p>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      <div class="menu-item-img img-4"></div>
+      <div class="menu-item-text">
+        <div class="menu-item-top">
+          <span class="menu-item-name">Margherita Pizza</span>
+          <span class="menu-item-price">$14.50</span>
+        </div>
+        <p class="menu-item-desc">Classic Margherita pizza with fresh mozzarella, tomatoes, and basil.</p>
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

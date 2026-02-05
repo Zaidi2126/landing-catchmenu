@@ -1,0 +1,68 @@
+---
+description: All static assets must use leading slash (/css, /js, /img) — no relative paths or BASE_URL + path
+globs: "**/*.php,**/*.html,**/*.js,**/*.css"
+alwaysApply: false
+---
+
+# Static asset paths: always use leading slash
+
+**Rule:** All references to project static assets (CSS, JS, images) must use a path that **starts with a slash**.
+
+- **css** → `/css/...`
+- **js** → `/js/...`
+- **img** → `/img/...`
+- **modal** (e.g. contact form) → `/modal/...`
+
+So the browser always requests from the site root and assets work on any URL (home, routed pages, subdirectories).
+
+---
+
+## ✅ Allowed
+
+```html
+<link href="/css/style.css" rel="stylesheet" />
+<script src="/js/init.js"></script>
+<img src="/img/logo/logo.png" alt="" />
+```
+
+```css
+background-image: url(/img/patterns/foo.png);
+```
+
+```javascript
+fetch("/modal/contact.php", ...);
+element.css({ backgroundImage: "url(" + url + ")" });  // url must resolve to /img/... or absolute
+```
+
+In PHP, if you need a base for subdirectory deployment, output a path that **still starts with slash** in the final HTML (e.g. `<?php echo $base; ?>/css/style.css` where `$base` is `''` or `/subfolder` → result is `/css/...` or `/subfolder/css/...`). The **path after the origin must begin with `/`**.
+
+---
+
+## ❌ Forbidden
+
+- **Relative paths for project assets:**
+  - `css/file.css`
+  - `js/init.js`
+  - `img/logo.png`
+  - `./css/file.css`
+  - `../img/logo.png`
+
+- **Concatenation that produces a path without a leading slash:**
+  - `BASE_URL + "css/file.css"` (can produce `css/file.css` if BASE_URL is empty)
+  - `base + "js/init.js"`
+  - Any pattern that might output `css/...`, `js/...`, or `img/...` without a leading `/`
+
+- **In CSS:** `url(img/...)`, `url(../img/...)`, `url(css/...)`
+
+---
+
+## Summary
+
+| Asset type | Correct       | Wrong              |
+|-----------|---------------|--------------------|
+| CSS       | `/css/...`   | `css/...`, `./css/...` |
+| JS        | `/js/...`    | `js/...`, `BASE_URL + "js/..."` |
+| Images    | `/img/...`   | `img/...`, `../img/...` |
+| Modal     | `/modal/...` | `modal/...`        |
+
+When adding or changing links, script sources, image sources, or CSS `url()`, use a path that starts with `/` (or results in a path that starts with `/` after the origin).

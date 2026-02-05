@@ -1,0 +1,2 @@
+# Use index.php as default so asset base path is correct (works in subdirectories e.g. InfinityFree)
+DirectoryIndex index.php
