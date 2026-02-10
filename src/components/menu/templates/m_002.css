@@ -1,0 +1,150 @@
+/* Template m_002 - scoped under .catch_tpl_m002 */
+.catch_tpl_m002 {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #2c2c2c;
+  line-height: 1.4;
+  position: relative;
+  padding: 24px 20px 40px;
+}
+@media (min-width: 640px) {
+  .catch_tpl_m002 { padding: 40px 32px 56px; }
+}
+@media (min-width: 900px) {
+  .catch_tpl_m002 { padding: 48px 56px 56px; }
+}
+
+.catch_tpl_m002 .bg-texture {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-color: var(--texture-tint, transparent);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.18'/%3E%3C/svg%3E");
+}
+.catch_tpl_m002 .bg-texture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--texture-overlay, transparent);
+  pointer-events: none;
+}
+.catch_tpl_m002 .menu-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+.catch_tpl_m002 .sep {
+  height: 1px;
+  background-color: #2c2c2c;
+  margin: 0 auto;
+  width: 66%;
+  position: relative;
+}
+.catch_tpl_m002 .sep-star {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  background-color: transparent;
+  text-align: center;
+  line-height: 14px;
+  font-size: 8px;
+  color: #2c2c2c;
+}
+.catch_tpl_m002 .header-name {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #2c2c2c;
+  margin-top: 28px;
+}
+@media (min-width: 480px) { .catch_tpl_m002 .header-name { font-size: 12px; letter-spacing: 0.35em; } }
+.catch_tpl_m002 .header-title {
+  text-align: center;
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  margin-top: 18px;
+}
+@media (min-width: 480px) { .catch_tpl_m002 .header-title { letter-spacing: 0.5em; } }
+.catch_tpl_m002 .header-sep-bottom { margin-top: 28px; margin-bottom: 40px; }
+.catch_tpl_m002 .grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+@media (min-width: 640px) {
+  .catch_tpl_m002 .grid { grid-template-columns: 1fr 1fr; gap: 36px 48px; }
+}
+.catch_tpl_m002 .item {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: stretch;
+}
+@media (min-width: 640px) {
+  .catch_tpl_m002 .item { flex-direction: row; gap: 20px; align-items: flex-start; }
+}
+.catch_tpl_m002 .item-text { flex: 1; min-width: 0; }
+.catch_tpl_m002 .item-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+.catch_tpl_m002 .item-price {
+  font-size: 14px;
+  font-weight: 400;
+  color: #2c2c2c;
+  margin-bottom: 8px;
+}
+.catch_tpl_m002 .item-desc {
+  font-size: 12px;
+  font-weight: 400;
+  color: #4a4a4a;
+  line-height: 1.5;
+}
+.catch_tpl_m002 .item-img-wrap { flex-shrink: 0; align-self: center; }
+@media (min-width: 640px) { .catch_tpl_m002 .item-img-wrap { align-self: flex-start; } }
+.catch_tpl_m002 .item-img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e8e6e2;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid rgba(255,255,255,0.8);
+  display: block;
+}
+@media (min-width: 480px) {
+  .catch_tpl_m002 .item-img { width: 150px; height: 150px; }
+}
+.catch_tpl_m002 .item-actions { margin-top: 6px; }
+.catch_tpl_m002 .btn-ar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  background: transparent;
+  border: 1.5px solid #2c2c2c;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: inherit;
+  transition: background 0.2s, color 0.2s;
+}
+.catch_tpl_m002 .btn-ar:hover { background: #2c2c2c; color: #f5f3ef; }
+.catch_tpl_m002 .btn-ar:active { opacity: 0.9; }

@@ -1,11 +1,14 @@
-# Use index.php as default so asset base path is correct (works in subdirectories e.g. InfinityFree)
-DirectoryIndex index.php
+# React SPA: serve index.html for all routes (so React Router works)
+# Use when deploying the contents of dist/ to Apache
 
-# Clean URLs: /thehub7 -> menu.php?slug=thehub7 (skip if file or directory exists)
+DirectoryIndex index.html
+
 <IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule ^(.+)$ menu.php?slug=$1 [L,QSA]
+  RewriteEngine On
+  RewriteBase /
+  # Don't rewrite files or directories
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  # Send everything else to index.html
+  RewriteRule ^ index.html [L]
 </IfModule>
