@@ -1,0 +1,60 @@
+/* Custom error pages - Catch Menu style */
+.catch_error_page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background: var(--catch-cream, #EEEBDD);
+  font-family: "Mulish", -apple-system, sans-serif;
+}
+
+.catch_error_inner {
+  text-align: center;
+  max-width: 420px;
+}
+
+.catch_error_code {
+  font-size: clamp(4rem, 15vw, 8rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--catch-burgundy, #630000);
+  margin: 0 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.catch_error_title {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 12px;
+  letter-spacing: 0.02em;
+}
+
+.catch_error_text {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #444;
+  margin: 0 0 28px;
+}
+
+.catch_error_btn {
+  display: inline-block;
+  padding: 14px 28px;
+  background: var(--catch-burgundy, #630000);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.catch_error_btn:hover {
+  background: var(--catch-burgundy-dark, #4a0000);
+  opacity: 0.95;
+}

@@ -85,11 +85,12 @@
 npm run build
 ```
 
-Output is in **`dist/`**. Deploy the contents of `dist/` and configure the server so all routes serve **`index.html`** (React Router is client-side).
+Output is in **`dist/`**. The server must serve **`index.html`** for every route (so `/thehub7` loads the app and React Router can show the menu). Otherwise you get 404 on direct links or refresh.
 
-- **Apache:** Use the included `.htaccess` (rewrite non-file requests to `index.html`). Point document root at `dist/` (or copy `.htaccess` into `dist/`).
+- **Vercel:** The repo includes **`vercel.json`** with a rewrite so all paths serve `index.html`. Redeploy after pulling.
+- **Netlify:** **`public/_redirects`** is copied to `dist/` and tells Netlify to serve `index.html` for all routes.
+- **Apache:** Use the included `.htaccess` (copy it into `dist/`). Document root = `dist/`.
 - **Nginx:** `try_files $uri $uri/ /index.html;`
-- **Static hosts (Vercel, Netlify, etc.):** Set SPA fallback to `index.html`.
 
 ---
 
