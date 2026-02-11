@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
+import { AR_ASSET_BASE } from '../config';
 
 const ArContext = createContext(null);
 
@@ -24,7 +25,7 @@ function isAndroid() {
 
 export function ArProvider({ children }) {
   const [arPopup, setArPopup] = useState({ open: false, useSafariMessage: false });
-  const [modelViewer, setModelViewer] = useState({ open: false, glb: '', poster: '' });
+  const [modelViewer, setModelViewer] = useState({ open: false, glb: '', usdz: '', poster: '' });
   const [dishImage, setDishImage] = useState({ open: false, src: '' });
 
   const showArPopup = useCallback((useSafariMessage) => {
@@ -37,8 +38,8 @@ export function ArProvider({ children }) {
     document.body.style.overflow = '';
   }, []);
 
-  const openModelViewer = useCallback((glb, poster = '') => {
-    setModelViewer({ open: true, glb, poster });
+  const openModelViewer = useCallback((glb, usdz = '', poster = '') => {
+    setModelViewer({ open: true, glb: glb || '', usdz: usdz || '', poster: poster || '' });
     document.body.style.overflow = 'hidden';
   }, []);
 
@@ -91,36 +92,83 @@ export function ArProvider({ children }) {
 const MSG_DESKTOP = 'To see this dish in augmented reality, please open this menu on your <strong>phone or mobile device</strong>. AR is not supported on laptops or desktops.';
 const MSG_IPHONE_NOT_SAFARI = 'AR on iPhone only works in <strong>Safari</strong>. Please open this menu in Safari (tap the share icon and choose "Open in Safari"), then tap "View in AR" again.';
 
+function toAbsoluteUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  try {
+    return new URL(trimmed, window.location.origin).href;
+  } catch {
+    return trimmed;
+  }
+}
+
+/**
+ * Resolve GLB/AR asset URL for display and for Scene Viewer.
+ * When VITE_AR_ASSET_BASE is set (e.g. S3 bucket URL), relative paths are resolved
+ * against it so Scene Viewer can fetch the model (public URL with CORS).
+ */
+function resolveGlbUrl(url) {
+  if (!url || typeof url !== 'string') return '';
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  try {
+    const base = AR_ASSET_BASE || window.location.origin;
+    return new URL(trimmed, base.endsWith('/') ? base : base + '/').href;
+  } catch {
+    return toAbsoluteUrl(url);
+  }
+}
+
+function toSceneViewerUrl(glbUrl) {
+  if (!glbUrl || typeof glbUrl !== 'string') return '';
+  const u = (glbUrl || '').trim();
+  if (/^https?:\/\/arvr\.google\.com\/scene-viewer/i.test(u)) return u;
+  const absolute = toAbsoluteUrl(u);
+  if (!absolute.startsWith('https://')) return '';
+  return 'https://arvr.google.com/scene-viewer/1.0?mode=ar_only&file=' + encodeURIComponent(absolute);
+}
+
+/**
+ * Android intent URL to launch Scene Viewer in AR (com.google.ar.core).
+ * Opening AR from our page (direct user tap) avoids Chrome blocking the intent
+ * as a popup (about:blank#blocked) when opening from inside the Scene Viewer tab.
+ * Fallback URL is used when Google Play Services for AR is not installed.
+ */
+function toSceneViewerIntentUrl(absoluteGlbUrl, fallbackUrl) {
+  if (!absoluteGlbUrl || typeof absoluteGlbUrl !== 'string' || !absoluteGlbUrl.startsWith('https://')) return '';
+  const httpsUrl = 'https://arvr.google.com/scene-viewer/1.0?mode=ar_only&file=' + encodeURIComponent(absoluteGlbUrl);
+  const fallback = fallbackUrl && typeof fallbackUrl === 'string'
+    ? fallbackUrl.trim()
+    : httpsUrl;
+  const encodedFallback = encodeURIComponent(fallback);
+  return (
+    'intent://arvr.google.com/scene-viewer/1.0?mode=ar_only&file=' +
+    encodeURIComponent(absoluteGlbUrl) +
+    '#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=' +
+    encodedFallback +
+    ';end;'
+  );
+}
+
 function ArModals({ arPopup, hideArPopup, modelViewer, closeModelViewer, dishImage, closeDishImage }) {
-  const modelViewerRef = useRef(null);
+  const modelViewerElRef = useRef(null);
+  const glb = modelViewer.open && modelViewer.glb ? resolveGlbUrl(modelViewer.glb) : '';
+  const usdz = modelViewer.open && modelViewer.usdz ? toAbsoluteUrl(modelViewer.usdz) : '';
+  const poster = modelViewer.open && modelViewer.poster ? toAbsoluteUrl(modelViewer.poster) : '';
+  const hasModel = glb || usdz;
+  const isSceneViewerLink = (url) => /^https?:\/\/arvr\.google\.com\/scene-viewer/i.test((url || '').trim());
+  const srcUrl = glb && !isSceneViewerLink(glb) ? glb : '';
+  const sceneViewerUrl = isSceneViewerLink(glb) ? glb : (srcUrl ? toSceneViewerUrl(glb) : '');
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
   useEffect(() => {
-    const container = modelViewerRef.current;
-    if (!container || !modelViewer.open || !modelViewer.glb) {
-      if (container) container.innerHTML = '';
-      return;
-    }
-    container.innerHTML = '';
-    const el = document.createElement('model-viewer');
-    el.setAttribute('id', 'catch_model_viewer_el');
-    el.setAttribute('ar', '');
-    el.setAttribute('ar-scale', 'fixed');
-    el.setAttribute('ar-modes', 'webxr scene-viewer quick-look fallback');
-    el.setAttribute('camera-controls', '');
-    el.setAttribute('touch-action', 'pan-y');
-    el.setAttribute('alt', 'Dish 3D model');
-    el.style.width = '100%';
-    el.style.height = '280px';
-    el.style.background = '#f0eeea';
-    el.src = modelViewer.glb;
-    if (modelViewer.poster) el.poster = modelViewer.poster;
-    const btn = document.createElement('button');
-    btn.setAttribute('slot', 'ar-button');
-    btn.className = 'catch_model_viewer_ar_btn';
-    btn.textContent = 'View in AR';
-    el.appendChild(btn);
-    container.appendChild(el);
-    return () => { container.innerHTML = ''; };
-  }, [modelViewer.open, modelViewer.glb, modelViewer.poster]);
+    const el = modelViewerElRef.current;
+    if (!el) return;
+    if (usdz) el.setAttribute('ios-src', usdz);
+    else el.removeAttribute('ios-src');
+  }, [modelViewer.open, usdz]);
 
   return (
     <>
@@ -138,7 +186,46 @@ function ArModals({ arPopup, hideArPopup, modelViewer, closeModelViewer, dishIma
         <div className="catch_model_viewer_backdrop" onClick={closeModelViewer} aria-hidden="true" />
         <div className="catch_model_viewer_box">
           <button type="button" className="catch_model_viewer_close" aria-label="Close" onClick={closeModelViewer}>&times;</button>
-          <div ref={modelViewerRef} style={{ width: '100%', height: '280px', background: '#f0eeea' }} />
+          {hasModel && (
+            <>
+              <model-viewer
+                ref={modelViewerElRef}
+                src={srcUrl || undefined}
+                poster={poster || undefined}
+                ar
+                ar-scale="fixed"
+                ar-modes="webxr scene-viewer quick-look fallback"
+                camera-controls
+                touch-action="pan-y"
+                alt="Dish 3D model"
+                style={{ width: '100%', height: '280px', display: 'block', background: '#f0eeea' }}
+              />
+              <div className="catch_ar_modal_actions">
+                {isAndroid && sceneViewerUrl ? (
+                  <a
+                    href={toSceneViewerIntentUrl(glb, sceneViewerUrl)}
+                    rel="noopener noreferrer"
+                    className="catch_ar_modal_btn"
+                  >
+                    View in AR
+                  </a>
+                ) : isIOS && usdz ? (
+                  <a href={usdz} rel="ar" className="catch_ar_modal_btn">
+                    View in AR
+                  </a>
+                ) : srcUrl || usdz ? (
+                  <a
+                    href={sceneViewerUrl || usdz || srcUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="catch_ar_modal_btn"
+                  >
+                    View in AR
+                  </a>
+                ) : null}
+              </div>
+            </>
+          )}
         </div>
       </div>
 

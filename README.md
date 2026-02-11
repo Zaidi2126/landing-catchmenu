@@ -77,6 +77,12 @@
    VITE_API_BASE=https://your-api.com
    ```
 
+5. **AR “View in AR” (Android):** If your API returns **relative** paths for `ar_secondary` (e.g. `dishes/ar/Egg_3DModel.glb`), set **`VITE_AR_ASSET_BASE`** to the public base URL where those files are served (e.g. your S3 bucket). Scene Viewer must be able to fetch the GLB from that URL (HTTPS + CORS). Example:
+   ```
+   VITE_AR_ASSET_BASE=https://your-bucket.s3.me-central-1.amazonaws.com
+   ```
+   If your API already returns full HTTPS URLs for 3D models, you can leave this unset.
+
 ---
 
 ## Build and deploy

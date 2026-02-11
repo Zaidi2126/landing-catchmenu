@@ -17,7 +17,7 @@ export default function M002View({ data }) {
     if (!rawAr) return;
     if (ar.isAndroid) {
       e.preventDefault();
-      ar.openModelViewer(rawAr, dish.image);
+      ar.openModelViewer(dish.ar_secondary || '', dish.ar_primary || '', dish.image);
     } else if (!ar.isMobile) {
       e.preventDefault();
       ar.showArPopup(false);

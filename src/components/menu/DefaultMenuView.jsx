@@ -55,7 +55,7 @@ export default function DefaultMenuView({ data }) {
                             <button
                               type="button"
                               className="catch_menu_dish_ar catch_menu_dish_ar_android"
-                              onClick={() => ar.openModelViewer(getArUrl(d, ar.isIphoneOrIpad), d.image)}
+                              onClick={() => ar.openModelViewer(d.ar_secondary || '', d.ar_primary || '', d.image)}
                             >
                               View in AR
                             </button>
